@@ -18,7 +18,7 @@
           "settings": {
             "text": "<h1>{{ closest.collection.title }}</h1>",
             "width": "fit-content",
-            "max_width": "normal",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-primary--family)",
@@ -44,7 +44,7 @@
           "settings": {
             "text": "{{ closest.collection.description }}",
             "width": "fit-content",
-            "max_width": "normal",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-primary--family)",
@@ -215,6 +215,8 @@
         "layout_type": "grid",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
+        "enable_infinite_scroll": true,
+        "products_per_page": 24,
         "product_grid_width": "centered",
         "full_width_on_mobile": true,
         "columns_gap_horizontal": 16,
