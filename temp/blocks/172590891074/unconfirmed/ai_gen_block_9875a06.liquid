@@ -1,6 +1,357 @@
+{% doc %}
+  @prompt
+    create product detail section
+    this include product meta object
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-details-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-product-details__heading-{{ ai_gen_id }} {
+    margin: 0 0 {{ block.settings.spacing }}px;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+  }
+
+  .ai-product-details__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.spacing }}px;
+  }
+
+  .ai-product-details__item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-product-details__label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    font-weight: 600;
+    text-transform: {{ block.settings.label_text_transform }};
+  }
+
+  .ai-product-details__value-{{ ai_gen_id }} {
+    font-size: {{ block.settings.value_size }}px;
+    color: {{ block.settings.value_color }};
+    line-height: 1.5;
+  }
+
+  .ai-product-details__divider-{{ ai_gen_id }} {
+    height: 1px;
+    background-color: {{ block.settings.divider_color }};
+    margin: {{ block.settings.spacing }}px 0;
+  }
+
+  .ai-product-details__empty-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    text-align: center;
+    color: {{ block.settings.label_color }};
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-details__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-product-details-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h3 class="ai-product-details__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h3>
+  {% endif %}
+
+  {% if block.settings.product_metaobject != blank %}
+    {% assign metaobject = metaobjects[block.settings.product_metaobject] %}
+    
+    {% if metaobject %}
+      <div class="ai-product-details__grid-{{ ai_gen_id }}">
+        {% for field in metaobject.system.fields %}
+          {% assign field_value = metaobject[field.key] %}
+          
+          {% if field_value != blank %}
+            <div class="ai-product-details__item-{{ ai_gen_id }}">
+              <div class="ai-product-details__label-{{ ai_gen_id }}">
+                {{ field.key | replace: '_', ' ' | capitalize }}
+              </div>
+              <div class="ai-product-details__value-{{ ai_gen_id }}">
+                {% if field.type == 'file_reference' %}
+                  {% if field_value.content_type contains 'image' %}
+                    <img 
+                      src="{{ field_value | image_url: width: 300 }}" 
+                      alt="{{ field.key }}"
+                      loading="lazy"
+                      style="max-width: 100%; height: auto; border-radius: 4px;"
+                    >
+                  {% else %}
+                    {{ field_value.url }}
+                  {% endif %}
+                {% elsif field.type == 'date' %}
+                  {{ field_value | date: '%B %d, %Y' }}
+                {% elsif field.type == 'date_time' %}
+                  {{ field_value | date: '%B %d, %Y at %I:%M %p' }}
+                {% elsif field.type == 'boolean' %}
+                  {% if field_value %}
+                    Yes
+                  {% else %}
+                    No
+                  {% endif %}
+                {% elsif field.type == 'list.single_line_text_field' or field.type == 'list.multi_line_text_field' %}
+                  {% for item in field_value %}
+                    <div>{{ item }}</div>
+                  {% endfor %}
+                {% elsif field.type == 'product_reference' %}
+                  <a href="{{ field_value.url }}">{{ field_value.title }}</a>
+                {% elsif field.type == 'variant_reference' %}
+                  <a href="{{ field_value.url }}">{{ field_value.title }}</a>
+                {% elsif field.type == 'collection_reference' %}
+                  <a href="{{ field_value.url }}">{{ field_value.title }}</a>
+                {% elsif field.type == 'page_reference' %}
+                  <a href="{{ field_value.url }}">{{ field_value.title }}</a>
+                {% elsif field.type == 'url' %}
+                  <a href="{{ field_value }}" target="_blank" rel="noopener">{{ field_value }}</a>
+                {% elsif field.type == 'rich_text' %}
+                  {{ field_value }}
+                {% elsif field.type == 'rating' %}
+                  {{ field_value.value }} / {{ field_value.scale_max }}
+                {% elsif field.type == 'money' %}
+                  {{ field_value | money }}
+                {% elsif field.type == 'dimension' %}
+                  {{ field_value.value }} {{ field_value.unit }}
+                {% elsif field.type == 'volume' %}
+                  {{ field_value.value }} {{ field_value.unit }}
+                {% elsif field.type == 'weight' %}
+                  {{ field_value.value }} {{ field_value.unit }}
+                {% else %}
+                  {{ field_value }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if block.settings.show_divider %}
+        <div class="ai-product-details__divider-{{ ai_gen_id }}"></div>
+      {% endif %}
+    {% else %}
+      <div class="ai-product-details__empty-{{ ai_gen_id }}">
+        Metaobject not found
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="ai-product-details__empty-{{ ai_gen_id }}">
+      Next, select a product metaobject to display details
+    </div>
+  {% endif %}
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Product details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product details"
+    },
+    {
+      "type": "metaobject",
+      "id": "product_metaobject",
+      "label": "Product metaobject",
+      "metaobject_type": "product_details"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Spacing",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show bottom divider",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fdfaf5"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#4a3728"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label",
+      "default": "#7b5040"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value",
+      "default": "#1e1e1e"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#c4a882"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "label": "Value size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "label_text_transform",
+      "label": "Label text case",
+      "options": [
+        {
+          "value": "none",
+          "label": "Default"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "uppercase"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product details"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
