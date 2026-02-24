@@ -25,7 +25,7 @@
       }
     },
     "main": {
-      "type": "main-collection",
+      "type": "main-collection-wholesale",
       "blocks": {
         "filters": {
           "type": "filters",
@@ -50,8 +50,8 @@
           },
           "blocks": {}
         },
-        "product-card": {
-          "type": "_product-card",
+        "product-card-wholesale": {
+          "type": "_product-card-wholesale",
           "static": true,
           "settings": {
             "product_card_gap": 4,
@@ -129,18 +129,10 @@
               },
               "blocks": {}
             },
-            "variant_picker_cAmaJ9": {
-              "type": "variant-picker",
-              "name": "t:names.product_variant_picker",
-              "settings": {
-                "variant_style": "dropdowns",
-                "show_swatches": true,
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 8,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
+            "card_buy_button_popup_JxPUWc": {
+              "type": "card-buy-button-popup",
+              "name": "Card buy button",
+              "settings": {},
               "blocks": {}
             }
           },
@@ -148,7 +140,7 @@
             "card-gallery",
             "product_title_4nY4eT",
             "price_EzJzMm",
-            "variant_picker_cAmaJ9"
+            "card_buy_button_popup_JxPUWc"
           ]
         }
       },
