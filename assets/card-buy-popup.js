@@ -103,16 +103,35 @@ class CardBuyPopup {
     if (!(productCard instanceof HTMLElement)) return;
 
     const cardRect = productCard.getBoundingClientRect();
-    const popupWidth = Math.min(480, window.innerWidth - 24);
-    const popupHeight = Math.min(560, Math.max(320, cardRect.height + 80));
     const margin = 12;
+    const gapFromCard = 8;
+    const isMobile = window.innerWidth < 750;
 
-    const left = Math.min(window.innerWidth - popupWidth - margin, Math.max(margin, cardRect.left));
-    const top = Math.min(window.innerHeight - popupHeight - margin, Math.max(margin, cardRect.top));
+    // Desktop: match product card width. Mobile: cap width and center.
+    const popupWidth = isMobile
+      ? Math.min(420, window.innerWidth - margin * 2)
+      : Math.min(cardRect.width, window.innerWidth - margin * 2);
+    this.popup.style.width = `${popupWidth}px`;
+
+    // Measure after width is applied to get accurate height.
+    const measuredHeight = this.popup.scrollHeight;
+    const popupHeight = Math.min(measuredHeight, window.innerHeight - margin * 2);
+
+    const left = isMobile
+      ? Math.max(margin, (window.innerWidth - popupWidth) / 2)
+      : Math.min(window.innerWidth - popupWidth - margin, Math.max(margin, cardRect.left));
+
+    // Prefer below card; clamp into viewport if there's not enough space.
+    let top = cardRect.bottom + gapFromCard;
+    if (top + popupHeight > window.innerHeight - margin) {
+      top = window.innerHeight - popupHeight - margin;
+    }
+    if (top < margin) {
+      top = margin;
+    }
 
     this.popup.style.left = `${left}px`;
     this.popup.style.top = `${top}px`;
-    this.popup.style.width = `${popupWidth}px`;
     this.popup.style.maxHeight = `${popupHeight}px`;
   }
 
@@ -143,7 +162,7 @@ class CardBuyPopup {
 
     const hasOptions = Array.isArray(this.product.options) && this.product.options.length > 0;
     if (hasOptions) {
-      this.product.options.forEach((optionName, optionIndex) => {
+      this.product.options.forEach((optionEntry, optionIndex) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'card-buy-popup__field';
 
@@ -151,13 +170,13 @@ class CardBuyPopup {
 
         const label = document.createElement('label');
         label.setAttribute('for', id);
-        label.textContent = optionName;
+        label.textContent = this.getOptionName(optionEntry, optionIndex);
 
         const select = document.createElement('select');
         select.id = id;
         select.name = `option-${optionIndex + 1}`;
 
-        const values = this.uniqueOptionValues(optionIndex);
+        const values = this.uniqueOptionValues(optionIndex, optionEntry);
         for (const value of values) {
           const option = document.createElement('option');
           option.value = value;
@@ -181,7 +200,25 @@ class CardBuyPopup {
     this.syncVariantFromSelection();
   }
 
-  uniqueOptionValues(optionIndex) {
+  getOptionName(optionEntry, optionIndex) {
+    if (typeof optionEntry === 'string') return optionEntry;
+    if (optionEntry && typeof optionEntry === 'object' && typeof optionEntry.name === 'string') {
+      return optionEntry.name;
+    }
+
+    return `Option ${optionIndex + 1}`;
+  }
+
+  uniqueOptionValues(optionIndex, optionEntry) {
+    if (
+      optionEntry &&
+      typeof optionEntry === 'object' &&
+      Array.isArray(optionEntry.values) &&
+      optionEntry.values.length > 0
+    ) {
+      return optionEntry.values.filter((value) => typeof value === 'string');
+    }
+
     if (!Array.isArray(this.product?.variants)) return [];
 
     const key = `option${optionIndex + 1}`;
