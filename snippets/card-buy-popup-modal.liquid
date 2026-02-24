@@ -1,0 +1,112 @@
+<div
+  id="card-buy-popup"
+  class="card-buy-popup color-{{ settings.popover_color_scheme }} hidden"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="card-buy-popup-title"
+>
+  <button
+    class="button button-unstyled close-button card-buy-popup__close"
+    type="button"
+    data-card-buy-close
+    aria-label="{{ 'accessibility.close_dialog' | t }}"
+  >
+    {{- 'icon-close.svg' | inline_asset_content -}}
+  </button>
+
+  <div class="card-buy-popup__content">
+    <h2
+      id="card-buy-popup-title"
+      class="h4"
+      data-card-buy-title
+    ></h2>
+
+    <form
+      class="card-buy-popup__form"
+      data-card-buy-form
+    >
+      <div
+        class="card-buy-popup__options"
+        data-card-buy-options
+      ></div>
+
+      <div class="card-buy-popup__field">
+        <label for="card-buy-quantity">{{ 'accessibility.quantity' | t }}</label>
+        <input
+          id="card-buy-quantity"
+          name="quantity"
+          type="number"
+          min="1"
+          step="1"
+          value="1"
+          data-card-buy-quantity
+        >
+      </div>
+
+      <p
+        class="card-buy-popup__error hidden"
+        data-card-buy-error
+        role="alert"
+      ></p>
+
+      <button
+        class="button"
+        type="submit"
+        data-card-buy-submit
+      >
+        {{ 'actions.add_to_cart' | t }}
+      </button>
+    </form>
+  </div>
+</div>
+
+{% stylesheet %}
+  .card-buy-popup {
+    position: fixed;
+    z-index: var(--layer-raised);
+    width: min(30rem, calc(100vw - 2 * var(--padding-md)));
+    border: var(--style-border-popover);
+    border-radius: var(--style-border-radius-popover);
+    box-shadow: 0 8px 24px rgb(0 0 0 / var(--opacity-20));
+    background: var(--color-background);
+    overflow: hidden;
+  }
+
+  .card-buy-popup__close {
+    position: absolute;
+    top: var(--padding-xs);
+    right: var(--padding-xs);
+  }
+
+  .card-buy-popup__content {
+    padding: var(--padding-xl);
+    display: grid;
+    gap: var(--gap-md);
+  }
+
+  .card-buy-popup__form {
+    display: grid;
+    gap: var(--gap-md);
+  }
+
+  .card-buy-popup__options {
+    display: grid;
+    gap: var(--gap-sm);
+  }
+
+  .card-buy-popup__field {
+    display: grid;
+    gap: var(--gap-2xs);
+  }
+
+  .card-buy-popup__field select,
+  .card-buy-popup__field input {
+    min-height: var(--minimum-touch-target);
+    padding-inline: var(--padding-sm);
+  }
+
+  .card-buy-popup__error {
+    color: rgb(var(--color-error-rgb, 176 0 32));
+    margin: 0;
+  }
+{% endstylesheet %}

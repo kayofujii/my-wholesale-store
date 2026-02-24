@@ -1,0 +1,27 @@
+
+{% liquid
+  assign product = closest.product
+-%}
+
+{% unless product == blank %}
+  {% render 'card-buy-button-popup', product: product %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Card buy button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the custom add-to-cart popup trigger on product cards."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Card buy button",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

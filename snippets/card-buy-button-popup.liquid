@@ -1,0 +1,16 @@
+{%- doc -%}
+  Renders the trigger button for the card buy popup.
+
+  @param {object} product - Product object used to fetch variants in popup
+{%- enddoc -%}
+
+<button
+  class="button add-to-cart-button card-buy-popup-trigger"
+  type="button"
+  aria-haspopup="true"
+  aria-expanded="false"
+  data-product-handle="{{ product.handle }}"
+  data-product-title="{{ product.title | escape }}"
+>
+  {{ 'actions.add_to_cart' | t }}
+</button>
