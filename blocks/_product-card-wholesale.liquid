@@ -8,11 +8,11 @@
   {% content_for 'blocks', closest.product: product %}
 {% endcapture %}
 
-{% render 'product-card', children: children, product: product %}
+{% render 'product-card-wholesale', children: children, product: product %}
 
 {% schema %}
 {
-  "name": "t:names.product_card",
+  "name": "Wholesale product card",
   "blocks": [
     {
       "type": "_product-card-group"

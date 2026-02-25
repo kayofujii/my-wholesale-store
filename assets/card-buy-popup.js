@@ -20,7 +20,6 @@ class CardBuyPopup {
     document.addEventListener('click', this.handleDocumentClick);
     document.addEventListener('keydown', this.handleKeydown);
     window.addEventListener('resize', this.handleViewportChange);
-    window.addEventListener('scroll', this.handleViewportChange, true);
 
     this.popup.querySelector('[data-card-buy-close]')?.addEventListener('click', () => this.close());
     this.form?.addEventListener('submit', this.handleSubmit);
@@ -122,17 +121,14 @@ class CardBuyPopup {
       ? Math.max(margin, (window.innerWidth - popupWidth) / 2)
       : Math.min(window.innerWidth - popupWidth - margin, Math.max(margin, cardRect.left));
 
-    // Prefer below card; clamp into viewport if there's not enough space.
-    let top = cardRect.bottom + gapFromCard;
-    if (top + popupHeight > window.innerHeight - margin) {
-      top = window.innerHeight - popupHeight - margin;
-    }
+    const triggerRect = this.activeTrigger.getBoundingClientRect();
+    let top = triggerRect.top - popupHeight - gapFromCard;
     if (top < margin) {
       top = margin;
     }
 
     this.popup.style.left = `${left}px`;
-    this.popup.style.top = `${top}px`;
+    this.popup.style.top = `${top + window.scrollY}px`;
     this.popup.style.maxHeight = `${popupHeight}px`;
   }
 
