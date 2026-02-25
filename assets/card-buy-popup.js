@@ -9,6 +9,7 @@ class CardBuyPopup {
     this.optionsContainer = this.popup.querySelector('[data-card-buy-options]');
     this.title = this.popup.querySelector('[data-card-buy-title]');
     this.quantityInput = this.popup.querySelector('[data-card-buy-quantity]');
+    this.quantitySelector = this.popup.querySelector('quantity-selector-component');
     this.error = this.popup.querySelector('[data-card-buy-error]');
     this.submitButton = this.popup.querySelector('[data-card-buy-submit]');
 
@@ -194,7 +195,6 @@ class CardBuyPopup {
 
     if (this.quantityInput instanceof HTMLInputElement) {
       this.quantityInput.value = '1';
-      this.quantityInput.min = '1';
     }
 
     this.syncVariantFromSelection();
@@ -257,6 +257,7 @@ class CardBuyPopup {
     });
 
     this.currentVariant = matched || null;
+    this.updateQuantityConstraints();
 
     if (!(this.submitButton instanceof HTMLButtonElement)) return;
 
@@ -332,6 +333,45 @@ class CardBuyPopup {
   getQuantity() {
     if (!(this.quantityInput instanceof HTMLInputElement)) return 1;
     return Math.max(1, Number.parseInt(this.quantityInput.value, 10) || 1);
+  }
+
+  getQuantityRule() {
+    const fallback = { min: 1, max: null, step: 1 };
+    if (!this.currentVariant) return fallback;
+
+    const min = 1;
+    const step = 1;
+    const hasInventoryCap =
+      this.currentVariant.inventory_management && this.currentVariant.inventory_policy !== 'continue';
+    const max = hasInventoryCap ? Math.max(this.currentVariant.inventory_quantity || 0, min) : null;
+
+    return { min, max, step };
+  }
+
+  updateQuantityConstraints() {
+    if (!(this.quantityInput instanceof HTMLInputElement)) return;
+
+    const { min, max, step } = this.getQuantityRule();
+    const current = Number.parseInt(this.quantityInput.value, 10) || min;
+    const normalized = max == null ? Math.max(min, current) : Math.max(min, Math.min(max, current));
+
+    this.quantityInput.min = String(min);
+    this.quantityInput.step = String(step);
+    this.quantityInput.value = String(normalized);
+
+    if (max == null) {
+      this.quantityInput.removeAttribute('max');
+    } else {
+      this.quantityInput.max = String(max);
+    }
+
+    if (this.quantitySelector && typeof this.quantitySelector.updateConstraints === 'function') {
+      if (this.currentVariant?.id) {
+        this.quantitySelector.dataset.variantId = String(this.currentVariant.id);
+      }
+      this.quantitySelector.updateConstraints(String(min), max == null ? null : String(max), String(step));
+      this.quantitySelector.setValue(String(normalized));
+    }
   }
 
   getCartSectionIds() {

@@ -32,15 +32,49 @@
 
       <div class="card-buy-popup__field">
         <label for="card-buy-quantity">{{ 'accessibility.quantity' | t }}</label>
-        <input
-          id="card-buy-quantity"
-          name="quantity"
-          type="number"
-          min="1"
-          step="1"
-          value="1"
-          data-card-buy-quantity
+        <quantity-selector-component
+          class="quantity-selector"
+          data-variant-id=""
         >
+          <button
+            class="button quantity-minus button-unstyled"
+            type="button"
+            name="minus"
+            on:click="/decreaseQuantity"
+            ref="minusButton"
+          >
+            <span class="visually-hidden">{{ 'accessibility.decrease_quantity' | t }}</span>
+            <span class="svg-wrapper icon-plus">
+              {{- 'icon-minus.svg' | inline_asset_content -}}
+            </span>
+          </button>
+          <input
+            id="card-buy-quantity"
+            name="quantity"
+            type="number"
+            min="1"
+            step="1"
+            value="1"
+            data-cart-quantity="0"
+            data-card-buy-quantity
+            ref="quantityInput"
+            on:blur="/setQuantity"
+            on:focus="/selectInputValue"
+            aria-label="{{ 'accessibility.quantity' | t }}"
+          >
+          <button
+            class="button quantity-plus button-unstyled"
+            type="button"
+            name="plus"
+            on:click="/increaseQuantity"
+            ref="plusButton"
+          >
+            <span class="visually-hidden">{{ 'accessibility.increase_quantity' | t }}</span>
+            <span class="svg-wrapper icon-plus">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+            </span>
+          </button>
+        </quantity-selector-component>
       </div>
 
       <p
@@ -105,6 +139,18 @@
   .card-buy-popup__field input {
     min-height: var(--minimum-touch-target);
     padding-inline: var(--padding-sm);
+    display: flex;
+    position: relative;
+    border: var(--style-border-width-inputs) solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs);
+    align-items: center;
+    margin-top: var(--margin-2xs);
+    overflow: clip;
+  }
+
+  .card-buy-popup .quantity-selector {
+    width: 100%;
+    min-height: var(--minimum-touch-target);
   }
 
   .card-buy-popup__error {
