@@ -324,7 +324,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p><strong>Dietary preferences: </strong>{{ closest.product.metafields.shopify[\"dietary-preferences\"] | metafield_text: field: 'label' }}<br/><strong>Country: </strong>{{ closest.product.metafields.shopify.country | metafield_text: field: 'label' }}<br/><strong>Flavor: </strong>{{ closest.product.metafields.shopify.flavor | metafield_text: field: 'label' }}<br/><strong>Coffee product from: </strong>{{ closest.product.metafields.shopify[\"coffee-product-form\"] | metafield_text: field: 'label' }}<strong><br/>Coffee roast: </strong>{{ closest.product.metafields.shopify[\"coffee-roast\"] | metafield_text: field: 'label' }}</p>",
+            "text": "<p>Dietary preferences: {{ closest.product.metafields.shopify[\"dietary-preferences\"] | metafield_text: field: 'label' }}<br/>Country: {{ closest.product.metafields.shopify.country | metafield_text: field: 'label' }}<br/>Flavor: {{ closest.product.metafields.shopify.flavor | metafield_text: field: 'label' }}<br/>Coffee product from: {{ closest.product.metafields.shopify[\"coffee-product-form\"] | metafield_text: field: 'label' }}<br/>Coffee roast: {{ closest.product.metafields.shopify[\"coffee-roast\"] | metafield_text: field: 'label' }}</p>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
