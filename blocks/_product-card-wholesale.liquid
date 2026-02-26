@@ -1,14 +1,8 @@
-
-
 {% liquid
   assign product = closest.product
--%}
+%}
 
-{% capture children %}
-  {% content_for 'blocks', closest.product: product %}
-{% endcapture %}
-
-{% render 'product-card-wholesale', children: children, product: product %}
+{% render 'product-card-wholesale', product: product %}
 
 {% schema %}
 {
@@ -136,6 +130,16 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title font size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 24
     }
   ]
 }
