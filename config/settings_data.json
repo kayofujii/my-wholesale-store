@@ -258,9 +258,9 @@
       "scheme-5": {
         "settings": {
           "background": "#2c3a2e",
-          "foreground_heading": "#fdfaf5",
+          "foreground_heading": "#c4a882",
           "foreground": "#f5f0e8",
-          "primary": "#c4a882",
+          "primary": "#f5f0e8",
           "primary_hover": "#fdfaf5",
           "border": "#c4a882",
           "shadow": "#1e1e1e",
