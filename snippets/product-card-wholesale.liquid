@@ -9,8 +9,6 @@
   @param {number} [product_card_gap] - The gap between the product card children (overrides block settings)
 {%- enddoc -%}
 
-{% assign block_settings = block.settings %}
-
 {% style %}
   {% if request.visual_preview_mode %}
     product-card-link {
@@ -32,7 +30,7 @@
   endif
 
   assign product_card_id = 'product-card-link-' | append: block.id | append: '-' | append: product.id
-  assign product_card_gap_value = product_card_gap | default: block_settings.product_card_gap
+  assign product_card_gap_value = product_card_gap | default: 16
 
   # Logic to determine which variant URL to use (matching swatch selection logic)
   assign variant_to_link = product.selected_or_first_available_variant
@@ -65,7 +63,7 @@
   >
 {%- endif -%}
 <product-card
-  class="product-card"
+  class="product-card product-card--wholesale"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
   data-product-transition="{{ settings.transition_to_main_product }}"
@@ -111,7 +109,23 @@
       {% if block_settings.padding-block-end > 0 %}--zoom-out-padding-block-end: min(var(--padding-xs), {{ block_settings.padding-block-end | times: 0.7}}px);{% endif %}
     "
   >
-    {{ children }}
+    <div class="product-card__content product-grid__card product-card-wholesale__body">
+      <div class="product-card__media">
+        {% if product.featured_media %}
+          {{ product.featured_media | image_url: width: 800 | image_tag: loading: 'lazy', alt: product.title }}
+        {% endif %}
+      </div>
+
+      <h3 class="product-card__title">
+        {% if product != blank %}{{ product.title }}{% else %}{{ 'onboarding.product_title' | t }}{% endif %}
+      </h3>
+
+      <p class="product-card__price">
+        {% if product != blank %}{{ product.price | money }}{% endif %}
+      </p>
+
+      {% render 'card-buy-button-popup', product: product %}
+    </div>
   </div>
 </product-card>
 {%- if settings.transition_to_main_product -%}
@@ -122,6 +136,31 @@
   product-card-link,
   :not(product-card-link) product-card {
     width: 100%;
+  }
+
+  .resource-list__item .product-card--wholesale,
+  .product-grid__item .product-card--wholesale {
+    width: 100%;
+    max-width: none;
+  }
+
+  .resource-list__item .product-card--wholesale .product-card-wholesale__body,
+  .product-grid__item .product-card--wholesale .product-card-wholesale__body {
+    display: grid;
+    gap: var(--wholesale-card-gap, 0.75rem);
+    padding: var(--wholesale-card-padding, 0);
+    width: 100%;
+  }
+
+  .product-card--wholesale .product-card__title,
+  .product-card--wholesale .product-card__price {
+    margin: 0;
+  }
+
+  .product-card--wholesale .product-card__media img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .product-card__placeholder-image svg {
