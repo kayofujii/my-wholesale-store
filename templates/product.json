@@ -72,7 +72,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Dietary preferences: {{ closest.product.metafields.shopify[\"dietary-preferences\"] | metafield_text: field: 'label' }}<br/>Country: {{ closest.product.metafields.shopify.country | metafield_text: field: 'label' }}<br/>Flavor: {{ closest.product.metafields.shopify.flavor | metafield_text: field: 'label' }}<br/>Coffee product from: {{ closest.product.metafields.shopify[\"coffee-product-form\"] | metafield_text: field: 'label' }}<br/>Coffee roast: {{ closest.product.metafields.shopify[\"coffee-roast\"] | metafield_text: field: 'label' }}</p>",
+                "text": "",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
