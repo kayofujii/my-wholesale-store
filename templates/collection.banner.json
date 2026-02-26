@@ -52,10 +52,10 @@
         },
         "static-product-card": {
           "type": "_product-card-wholesale",
+          "name": "Wholesale product card",
           "static": true,
-          "blocks": {},
-          "block_order": [],
-          "name": "Wholesale product card"
+          "settings": {},
+          "blocks": {}
         }
       },
       "settings": {
