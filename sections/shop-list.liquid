@@ -1,0 +1,185 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    spacing-style
+    shop-list
+  "
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --shop-list-gap-mobile: {{ section.settings.gap_mobile }}px;
+    --shop-list-gap-desktop: {{ section.settings.gap_desktop }}px;
+  "
+>
+  {% if section.settings.heading != blank %}
+    <h2 class="shop-list__heading">{{ section.settings.heading | escape }}</h2>
+  {% endif %}
+
+  <div class="shop-list__items">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .shop-list__heading {
+    margin: 0 0 1rem;
+    color: var(--color-foreground-heading);
+  }
+
+  .shop-list__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--shop-list-gap-mobile, 12px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .shop-list__items {
+      flex-direction: row;
+      gap: var(--shop-list-gap-desktop, 16px);
+      align-items: stretch;
+    }
+
+    .shop-list__items > * {
+      flex: 1 1 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shop list",
+  "class": "shop-list-section",
+  "enabled_on": {
+    "templates": ["*"]
+  },
+  "blocks": [
+    {
+      "type": "shop-card"
+    },
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our shops"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap mobile",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "label": "Gap desktop",
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop list",
+      "category": "Text",
+      "settings": {
+        "heading": "Our shops",
+        "section_width": "page-width",
+        "color_scheme": "scheme-2",
+        "gap_mobile": 12,
+        "gap_desktop": 16,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      },
+      "blocks": {
+        "shop_1": {
+          "type": "shop-card",
+          "settings": {
+            "inherit_color_scheme": false,
+            "shop_name": "Gastown",
+            "address": "312 Water Street",
+            "open_time": "Mon-Fri 7am-6pm - Sat-Sun 8am-5pm",
+            "map_label": "Get direction",
+            "map_link": "https://maps.google.com/?q=312+Water+Street",
+            "open_in_new_tab": true
+          }
+        },
+        "shop_2": {
+          "type": "shop-card",
+          "settings": {
+            "inherit_color_scheme": false,
+            "shop_name": "Kitsilano",
+            "address": "2198 W 4th Ave",
+            "open_time": "Mon-Fri 7am-6pm - Sat-Sun 8am-5pm",
+            "map_label": "Get direction",
+            "map_link": "https://maps.google.com/?q=2198+W+4th+Ave",
+            "open_in_new_tab": true
+          }
+        }
+      },
+      "block_order": ["shop_1", "shop_2"]
+    }
+  ]
+}
+{% endschema %}

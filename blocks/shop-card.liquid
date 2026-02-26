@@ -1,0 +1,127 @@
+{%- liquid
+  assign block_settings = block.settings
+-%}
+
+<div
+  class="shop-card spacing-style{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if block_settings.shop_name != blank -%}
+    <h4 class="shop-card__name">{{ block_settings.shop_name | escape }}</h4>
+  {%- endif -%}
+  <div class="shop-card__info">
+    {%- if block_settings.address != blank -%}
+      <p class="shop-card__line">{{ block_settings.address | escape | newline_to_br }}</p>
+    {%- endif -%}
+
+    {%- if block_settings.open_time != blank -%}
+      <p class="shop-card__line">{{ block_settings.open_time | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if block_settings.map_link != blank and block_settings.map_label != blank -%}
+    <a
+      class="shop-card__link link"
+      href="{{ block_settings.map_link }}"
+      {% if block_settings.open_in_new_tab %}
+        target="_blank"
+        rel="noopener noreferrer"
+      {% endif %}
+    >
+      {{- block_settings.map_label | escape -}}
+    </a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .shop-card {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .shop-card__name,
+  .shop-card__line {
+    margin: 0;
+  }
+
+  .shop-card__name {
+    color: var(--color-foreground-heading);
+  }
+
+  .shop-card__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shop card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "text",
+      "id": "shop_name",
+      "label": "Shop name",
+      "default": "Gastown"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "312 Water Street"
+    },
+    {
+      "type": "text",
+      "id": "open_time",
+      "label": "Open time",
+      "default": "Mon-Fri 7am-6pm - Sat-Sun 8am-5pm"
+    },
+    {
+      "type": "text",
+      "id": "map_label",
+      "label": "Map button label",
+      "default": "Get direction"
+    },
+    {
+      "type": "url",
+      "id": "map_link",
+      "label": "Google Maps link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open map in new tab",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop card",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}
