@@ -1,0 +1,177 @@
+{% liquid
+  assign block_settings = block.settings
+  assign steps = block_settings.steps | default: 5
+  assign roast_level = block_settings.default_level | default: 0
+
+  assign roast_list = product.metafields.shopify.coffee-roast.value
+    assign current_roast = ""
+
+    if roast_list != blank
+      for roast in roast_list
+        # Use the 'downcase' filter here to match your case strings
+        assign current_roast = roast.label | downcase
+      endfor
+    endif
+
+    case current_roast
+      when 'light', 'light roast'
+        assign roast_level = 1
+      when 'light-medium', 'light medium', 'medium-light', 'medium light'
+        assign roast_level = 2
+      when 'medium'
+        assign roast_level = 3
+      when 'medium-dark', 'medium dark'
+        assign roast_level = 4
+      when 'dark', 'dark roast'
+        assign roast_level = 5
+      else
+        # Default value if no match is found
+        assign roast_level = 0
+    endcase
+
+    # Final safety checks
+    if roast_level < 0
+      assign roast_level = 0
+    endif
+    
+    # Ensure 'steps' is defined elsewhere in your block settings
+    if roast_level > steps
+      assign roast_level = steps
+    endif
+%}
+
+{% if block_settings.show_when_blank or roast_level > 0 %}
+  <div
+    class="roast-level-block spacing-style"
+    style="
+      --roast-step-count: {{ steps }};
+      --roast-active-color: {{ block_settings.active_color }};
+      --roast-inactive-color: {{ block_settings.inactive_color }};
+    "
+    {{ block.shopify_attributes }}
+    
+  >
+    {% if block_settings.heading != blank %}
+      <p class="roast-level-block__heading">{{ block_settings.heading | escape }}</p>
+    {% endif %}
+
+    <div class="roast-level-block__scale" role="img" aria-label="{{ block_settings.heading | escape }}">
+      {% for i in (1..steps) %}
+        <span class="roast-level-block__step{% if i <= roast_level %} is-active{% endif %}"></span>
+      {% endfor %}
+    </div>
+
+    <div class="roast-level-block__labels">
+      <span>{{ block_settings.light_label | escape }}</span>
+      <span>{{ block_settings.dark_label | escape }}</span>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .roast-level-block {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .roast-level-block__heading {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--color-foreground-heading);
+  }
+
+  .roast-level-block__scale {
+    display: grid;
+    grid-template-columns: repeat(var(--roast-step-count, 5), minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .roast-level-block__step {
+    height: 1rem;
+    border-radius: 0.2rem;
+    background: var(--roast-inactive-color, #e7e1d8);
+  }
+
+  .roast-level-block__step.is-active {
+    background: var(--roast-active-color, #24382b);
+  }
+
+  .roast-level-block__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--color-foreground);
+    opacity: 0.8;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Roast level",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Roast level"
+    },
+    {
+      "type": "range",
+      "id": "steps",
+      "label": "Steps",
+      "min": 3,
+      "max": 7,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "default_level",
+      "label": "Fallback level",
+      "min": 0,
+      "max": 7,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "light_label",
+      "label": "Left label",
+      "default": "Light"
+    },
+    {
+      "type": "text",
+      "id": "dark_label",
+      "label": "Right label",
+      "default": "Dark"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Active color",
+      "default": "#24382B"
+    },
+    {
+      "type": "color",
+      "id": "inactive_color",
+      "label": "Inactive color",
+      "default": "#E7E1D8"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_when_blank",
+      "label": "Show when metafield is blank",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Roast level",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

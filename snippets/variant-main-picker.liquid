@@ -62,7 +62,7 @@
             {{ option_id_attribute }}
           >
             <legend>
-              {{ product_option.name | escape -}}
+              <span class="variant-option__swatch-label">{{ product_option.name | escape -}}</span>
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
               {%- endif %}
@@ -268,7 +268,12 @@
     height: var(--icon-size-2xs);
     pointer-events: none;
   }
-
+  .variant-option__swatch-label {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--color-foreground-heading);
+  }
   .variant-option__select--has-swatch {
     padding-inline-start: calc((2 * var(--padding-sm)) + var(--variant-picker-swatch-width));
   }
