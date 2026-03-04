@@ -22,8 +22,7 @@
 
       {% if origin_image != blank %}
         <div class="coffee-origin__media">
-          {{- origin_image | image_tag:
-            width: 800,
+          {{- origin_image | image_url: width: 800 | image_tag:
             loading: 'lazy',
             class: 'coffee-origin__image'
           -}}

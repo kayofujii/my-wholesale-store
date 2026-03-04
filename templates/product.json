@@ -19,10 +19,10 @@
             "media_presentation": "grid",
             "media_columns": "two",
             "image_gap": 4,
-            "large_first_image": false,
+            "large_first_image": true,
             "icons_style": "none",
             "slideshow_controls_style": "counter",
-            "slideshow_mobile_controls_style": "dots",
+            "slideshow_mobile_controls_style": "thumbnails",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
             "thumbnail_radius": 0,
@@ -389,6 +389,16 @@
         "padding-block-end": 0
       }
     },
+    "coffee_origin_story": {
+      "type": "coffee-origin",
+      "name": "Coffee origin story",
+      "settings": {
+        "image_position": "left",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
     "product_recommendations_qggXJq": {
       "type": "product-recommendations",
       "blocks": {
@@ -460,16 +470,6 @@
         "color_scheme": "scheme-2",
         "padding-block-start": 48,
         "padding-block-end": 48
-      }
-    },
-    "coffee_origin_story": {
-      "type": "coffee-origin",
-      "name": "Coffee origin story",
-      "settings": {
-        "image_position": "left",
-        "color_scheme": "scheme-1",
-        "padding_top": 64,
-        "padding_bottom": 64
       }
     }
   },
