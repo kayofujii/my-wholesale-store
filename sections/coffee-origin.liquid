@@ -1,0 +1,219 @@
+{% liquid
+  assign origin = product.metafields.custom.origin.value
+  assign country_label = product.metafields.shopify.country | metafield_text: field: 'label'
+
+  if origin != blank
+    assign origin_image = origin.image.value
+    assign origin_region = origin.region
+    assign origin_story = origin.story
+    assign altitude = origin.altitude
+    assign process = origin.process
+    assign variety = origin.variety
+    assign harvest = origin.harvest
+  endif
+%}
+
+{% if origin != blank %}
+  <section
+    class="coffee-origin color-{{ section.settings.color_scheme }}"
+    style="--padding-top: {{ section.settings.padding_top }}px; --padding-bottom: {{ section.settings.padding_bottom }}px;"
+  >
+    <div class="coffee-origin__inner page-width{% if section.settings.image_position == 'right' %} coffee-origin__inner--reverse{% endif %}">
+
+      {% if origin_image != blank %}
+        <div class="coffee-origin__media">
+          {{- origin_image | image_tag:
+            width: 800,
+            loading: 'lazy',
+            class: 'coffee-origin__image'
+          -}}
+        </div>
+      {% endif %}
+
+      <div class="coffee-origin__content">
+
+        <h2 class="coffee-origin__heading">
+          From
+          {%- if origin_region != blank %} {{ origin_region }},{% endif %}
+          {{ country_label }}
+        </h2>
+
+        {% if origin_story != blank %}
+          <div class="coffee-origin__story">{{ origin_story | metafield_tag }}</div>
+        {% endif %}
+
+        {% if altitude != blank or process != blank or variety != blank or harvest != blank %}
+          <dl class="coffee-origin__stats">
+            {% if altitude != blank %}
+              <div class="coffee-origin__stat">
+                <dt>Altitude</dt>
+                <dd>{{ altitude }}</dd>
+              </div>
+            {% endif %}
+            {% if process != blank %}
+              <div class="coffee-origin__stat">
+                <dt>Process</dt>
+                <dd>{{ process }}</dd>
+              </div>
+            {% endif %}
+            {% if variety != blank %}
+              <div class="coffee-origin__stat">
+                <dt>Variety</dt>
+                <dd>{{ variety }}</dd>
+              </div>
+            {% endif %}
+            {% if harvest != blank %}
+              <div class="coffee-origin__stat">
+                <dt>Harvest</dt>
+                <dd>{{ harvest }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .coffee-origin {
+    padding-block-start: var(--padding-top);
+    padding-block-end: var(--padding-bottom);
+  }
+
+  .coffee-origin__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .coffee-origin__inner--reverse .coffee-origin__media {
+    order: 2;
+  }
+
+  .coffee-origin__inner--reverse .coffee-origin__content {
+    order: 1;
+  }
+
+  .coffee-origin__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+
+  .coffee-origin__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .coffee-origin__heading {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.15;
+    margin: 0;
+    font-weight: normal;
+  }
+
+  .coffee-origin__story {
+    line-height: 1.75;
+    opacity: 0.85;
+    margin: 0;
+  }
+
+  .coffee-origin__stats {
+    display: flex;
+    gap: 40px;
+    margin: 8px 0 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+
+  .coffee-origin__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .coffee-origin__stat dt {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .coffee-origin__stat dd {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  @media (max-width: 749px) {
+    .coffee-origin__inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .coffee-origin__inner--reverse .coffee-origin__media,
+    .coffee-origin__inner--reverse .coffee-origin__content {
+      order: unset;
+    }
+
+    .coffee-origin__stats {
+      gap: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Coffee origin story",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coffee origin story",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
