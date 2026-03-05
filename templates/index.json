@@ -568,7 +568,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "Apply now",
-            "link": "shopify://collections/all",
+            "link": "shopify://pages/wholesale-application",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
