@@ -1,6 +1,7 @@
 {% liquid
   assign origin = product.metafields.custom.origin.value
   assign country_label = product.metafields.shopify.country | metafield_text: field: 'label'
+  assign has_content = false
 
   if origin != blank
     assign origin_image = origin.image.value
@@ -10,15 +11,19 @@
     assign process = origin.process
     assign variety = origin.variety
     assign harvest = origin.harvest
+
+    if origin_image != blank or origin_story != blank or country_label != blank
+      assign has_content = true
+    endif
   endif
 %}
 
-{% if origin != blank %}
+{% if has_content %}
   <section
     class="coffee-origin color-{{ section.settings.color_scheme }}"
     style="--padding-top: {{ section.settings.padding_top }}px; --padding-bottom: {{ section.settings.padding_bottom }}px;"
   >
-    <div class="coffee-origin__inner page-width{% if section.settings.image_position == 'right' %} coffee-origin__inner--reverse{% endif %}">
+    <div class="coffee-origin__inner{% if section.settings.image_position == 'right' %} coffee-origin__inner--reverse{% endif %}">
 
       {% if origin_image != blank %}
         <div class="coffee-origin__media">
@@ -76,9 +81,17 @@
 {% endif %}
 
 {% stylesheet %}
+
   .coffee-origin {
     padding-block-start: var(--padding-top);
     padding-block-end: var(--padding-bottom);
+    margin-inline: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .coffee-origin {
+      margin-inline: 40px;
+    }
   }
 
   .coffee-origin__inner {

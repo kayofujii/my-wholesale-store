@@ -142,9 +142,15 @@
   .resource-list__item .product-card--wholesale,
   .product-grid__item .product-card--wholesale {
     width: 100%;
-    max-width: none;
+    max-width: 400px;
     display: flex;
     gap: 1rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .resource-list__slide {
+      max-width: 400px;
+    }
   }
 
   .resource-list__item .product-card--wholesale > .product-card__content,
@@ -181,6 +187,14 @@
     height: auto;
     border-radius: 0.375rem;
   }
+
+  @media screen and (min-width: 750px) {
+    .product-card--wholesale .product-card__media img {
+      max-width: 400px;
+      object-fit: cover;
+    }
+  }
+
 
   .product-card__placeholder-image svg {
     height: 100%;
