@@ -1,0 +1,192 @@
+{% liquid
+  assign icon_size = section.settings.icon_size | default: 32
+%}
+
+<section class="pillar-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="pillar-section__inner page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="pillar-section__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="pillar-section__grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign pillar_body = block.settings.body | default: block.settings.text -%}
+        <article class="pillar-item" role="listitem" {{ block.shopify_attributes }}>
+          <div class="pillar-item__icon" aria-hidden="true">
+            <svg
+              width="{{ icon_size }}"
+              height="{{ icon_size }}"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {% render 'icon', icon: block.settings.icon %}
+            </svg>
+          </div>
+
+          {%- if block.settings.heading != blank -%}
+            <h3 class="pillar-item__heading">{{ block.settings.heading }}</h3>
+          {%- endif -%}
+
+          {%- if pillar_body != blank -%}
+            <div class="pillar-item__body rte">{{ pillar_body }}</div>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .pillar-section__inner {
+    padding-block: 4rem;
+  }
+
+  .pillar-section__heading {
+    margin: 0 0 1.25rem;
+    text-align: center;
+  }
+
+  .pillar-section__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .pillar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .pillar-item__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    background-color: var(--color-primary);
+    padding: 16px;
+    border-radius: 99px;
+  }
+
+  .pillar-item__icon svg {
+    color: var(--color-background);
+  }
+
+  .pillar-item__heading {
+    margin: 0;
+  }
+
+  .pillar-item__body > * {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .pillar-section__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pillar",
+  "class": "pillar-wrapper",
+  "max_blocks": 3,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Partner With Us"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar_item",
+      "name": "Pillar item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "star",
+          "options": [
+            { "value": "star", "label": "Star" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "check_box", "label": "Check" },
+            { "value": "price_tag", "label": "Price tag" }
+          ]
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Pillar heading"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>Add your pillar body text here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pillar",
+      "blocks": [
+        {
+          "type": "pillar_item",
+          "settings": {
+            "icon": "star",
+            "heading": "Premium quality",
+            "body": "<p>Premium beans and consistent quality.</p>"
+          }
+        },
+        {
+          "type": "pillar_item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Reliable delivery",
+            "body": "<p>Reliable wholesale delivery schedule.</p>"
+          }
+        },
+        {
+          "type": "pillar_item",
+          "settings": {
+            "icon": "heart",
+            "heading": "Local support",
+            "body": "<p>Local support for your cafe team.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
