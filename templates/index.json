@@ -47,6 +47,26 @@
     },
     "product_list_fa6P9H": {
       "type": "product-list-wholesale",
+      "name": "Featured collection",
+      "settings": {
+        "collection": "all-coffee",
+        "layout_type": "carousel",
+        "carousel_on_mobile": false,
+        "max_products": 8,
+        "columns": 4,
+        "mobile_columns": "2",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 32,
+        "rows_gap": 32,
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "horizontal_alignment": "flex-start",
+        "gap": 32,
+        "color_scheme": "scheme-2",
+        "padding-block-start": 64,
+        "padding-block-end": 64
+      },
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
@@ -149,26 +169,6 @@
           "blocks": {}
         }
       },
-      "name": "Featured collection",
-      "settings": {
-        "collection": "all-coffee",
-        "layout_type": "carousel",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 32,
-        "rows_gap": 32,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 32,
-        "color_scheme": "scheme-2",
-        "padding-block-start": 64,
-        "padding-block-end": 64
-      }
     },
     "collection_list_itFVtg": {
       "type": "collection-list",
