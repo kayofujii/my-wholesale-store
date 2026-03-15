@@ -40,6 +40,9 @@
     },
     {
       "type": "collection-title"
+    },
+    {
+      "type": "collection-sub-title"
     }
   ],
   "tag": null,
@@ -182,7 +185,20 @@
       "step": 1,
       "unit": "px",
       "default": 0
-    }
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.background_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000066",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
   ]
 }
 {% endschema %}
