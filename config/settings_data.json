@@ -60,7 +60,7 @@
     "type_font_button_secondary": "body",
     "button_text_case_secondary": "uppercase",
     "pills_border_radius": 2,
-    "cart_type": "drawer",
+    "cart_type": "page",
     "cart_price_font": "secondary",
     "show_cart_note": false,
     "show_add_discount_code": true,

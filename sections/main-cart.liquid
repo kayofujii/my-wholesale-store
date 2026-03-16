@@ -48,6 +48,14 @@
       </div>
 
       {%- unless cart.empty? -%}
+        <div style="margin-top: 1rem;">
+          <button type="button" class="button button-secondary" id="clear-cart-btn">
+            Clear Cart
+          </button>
+        </div>
+      {%- endunless -%}
+
+      {%- unless cart.empty? -%}
         <div class="cart-page__summary">
           {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
         </div>
@@ -152,6 +160,58 @@
     }
   }
 {% endstylesheet %}
+
+<script>
+  document.getElementById('clear-cart-btn')?.addEventListener('click', async function() {
+    if (!confirm('Are you sure you want to remove all items?')) {
+      return;
+    }
+    
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Clearing...';
+    
+    try {
+      await fetch(window.Shopify.routes.root + 'cart/clear.js', {
+        method: 'POST'
+      });
+      
+      const cart = await fetch(window.Shopify.routes.root + 'cart.js')
+        .then(r => r.json());
+      
+      // Update cart badges
+      document.querySelectorAll('.cart-bubble__text-count').forEach(badge => {
+        badge.textContent = cart.item_count;
+      });
+      
+      // Show empty cart state
+      const cartPage = document.querySelector('.cart-page');
+      if (cartPage) {
+        cartPage.classList.add('cart-page--empty');
+      }
+      
+      // Replace items with empty message
+      const itemsSection = document.querySelector('.cart-page__items');
+      if (itemsSection) {
+        itemsSection.innerHTML = '<p style="text-align: center; padding: 2rem;">Your cart is empty</p>';
+      }
+      
+      // Remove summary section
+      const summarySection = document.querySelector('.cart-page__summary');
+      if (summarySection) {
+        summarySection.remove();
+      }
+      
+      // Remove the clear cart button
+      btn.parentElement.remove();
+      
+    } catch (error) {
+      alert('Error clearing cart');
+      btn.disabled = false;
+      btn.textContent = 'Clear Cart';
+    }
+  });
+</script>
 
 {% schema %}
 {
